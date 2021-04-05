@@ -1,0 +1,76 @@
+---
+zmathjax: true
+toc: true
+categories:
+ - LeetCode
+tags:
+ - 刷题笔记
+---
+
+#### [剑指 Offer 16. 数值的整数次方](https://leetcode-cn.com/problems/shu-zhi-de-zheng-shu-ci-fang-lcof/)
+
+实现函数`double Power(double base, int exponent)`，求`base`的`exponent`次方。不得使用库函数，同时不需要考虑大数问题。
+
+<!--more-->
+
+**示例1：**
+
+```
+输入: 2.00000, 10
+输出: 1024.00000
+```
+
+**示例2：**
+
+```
+输入: 2.10000, 3
+输出: 9.26100xxxxxxxxxx4 1输入: 2.10000, 32输出: 9.26100输入: intervals = [[1,4],[4,5]]3输出: [[1,5]]4解释: 区间 [1,4] 和 [4,5] 可被视为重叠区间。
+```
+
+**示例 3:**
+
+```
+输入: 2.00000, -2
+输出: 0.25000
+解释: 2-2 = 1/22 = 1/4 = 0.25
+```
+
+**说明:**
+
+- `-100.0 < x < 100.0`
+- `n` 是 `32` 位有符号整数，其数值范围是 [$-2^{31}$, $2^{31} − 1$] 。
+
+来源：力扣（LeetCode）
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+### 题解：
+
+本题可以直接使用 Java 的函数也能通过，但这明显不是我们想学习的，官方还有一种方法是迭代方法，这个方法通过找规律求解，在短时间内想到不容易，所以这里只记录递归方法。最原始的想法就是一个一个的乘起来，但是这样时间复杂度比较高，官方给出一种快速幂的思想，即 $x \times x$，$x^2 \times x^2$，$x^4 \times x^4$...这样就能加速幂乘过程，但是这里要注意一个问题，就是幂指数为奇数的时候，应该怎么判断。快速幂算法给的是从后往前，每次幂指数折半，如果当前幂指数为奇数，就要在结果中再乘以一个$x$
+
+具体代码如下：
+
+```java
+class Solution {
+    public double myPow(double x, int n) {
+        double temp = recursion(x, n);
+        //如果是负指数幂，需要返回结果的倒数
+        if (n < 0)
+            return 1 / temp;
+        else{
+            return temp;
+        }
+    }
+
+    private double recursion(double x, int n) {
+        //递归终止条件，任何数的0次幂都是1
+        if (n == 0)
+            return 1.0;
+        //得到指数幂折半后的结果
+        double y = recursion(x, n / 2);
+        if (n % 2 == 0)
+            return y * y;
+        else
+            return y * y * x;
+    }
+}
+```
