@@ -25,7 +25,7 @@ ClassLoader 只负责 class 文件的加载，至于它是否可以运行，则�
 
 1. class file 存在于本地硬盘上，可以理解为设计师画在纸上的模板，而最终这个模板在执行的时候是要加载到JVM 当中来根据这个文件实例化出 n 个一模一样的实例。
 2. class file 加载到 JVM 中，被称为 DNA 元数据模板，放在方法区。
-3. 在 class 文件 -> JVM -> 最终成为元数据模板，此过程就要一个运输工具（类装载器Class Loader），扮演一个快递员的角色。
+3. 在 class 文件 -> JVM -> 最终成为元数据模板，此过程就要一个运输工具（类装载器 Class Loader），扮演一个快递员的角色。
 
 ![image-20200705081913538](https://gitee.com/xlshi/blog_img/raw/master/img/20201009111558.png)
 
@@ -101,7 +101,7 @@ public class HelloApp {
 }
 ```
 
-上面的变量 a 在准备阶段会赋初始值，但不是1，而是0。
+上面的变量 a 在准备阶段会赋初始值，但不是 1，而是 0。
 
 - 为类变量分配内存并且设置该类变量的默认初始值，即零值；
 
@@ -115,24 +115,24 @@ public class HelloApp {
 
 - 事实上，解析操作往往会伴随着 JVM 在执行完初始化之后再执行。
 
-- 符号引用就是一组符号来描述所引用的目标。符号引用的字面量形式明确定义在《Java虚拟机规范》的 class文件格式中。直接引用就是直接指向目标的指针、相对偏移量或一个间接定位到目标的句柄。
+- 符号引用就是一组符号来描述所引用的目标。符号引用的字面量形式明确定义在《Java 虚拟机规范》的 class文件格式中。直接引用就是直接指向目标的指针、相对偏移量或一个间接定位到目标的句柄。
 
 - 解析动作主要针对类或接口、字段、类方法、接口方法、方法类型等。对应常量池中的 CONSTANT_Class_info、CONSTANT_Fieldref_info、CONSTANT_Methodref_info 等
 
 ### 初始化
 
-- 初始化阶段就是执行类构造器法 <clinit>（）的过程。
+- 初始化阶段就是执行类构造器法 `<clinit>()`的过程。
 
 - 此方法不需定义，是 javac 编译器自动收集类中的所有类变量的赋值动作和静态代码块中的语句合并而来。
   - 也就是说，当我们代码中包含 static 变量的时候，就会有 clinit 方法
 
 - 构造器方法中指令按语句在源文件中出现的顺序执行。
 
-- <clinit>（）不同于类的构造器。（关联：构造器是虚拟机视角下的 <init>（））
-- 若该类具有父类，JVM 会保证子类的 <clinit>（）执行前，父类的 <clinit>（）已经执行完毕。
-- 虚拟机必须保证一个类的 <clinit>（）方法在多线程下被同步加锁。
+- `<clinit>()`不同于类的构造器。（关联：构造器是虚拟机视角下的 `<init>()`）
+- 若该类具有父类，JVM 会保证子类的 `<clinit>()`执行前，父类的 `<clinit>()`已经执行完毕。
+- 虚拟机必须保证一个类的 `<clinit>()`方法在多线程下被同步加锁。
 
-任何一个类在声明后，都有生成一个构造器，默认是空参构造器
+任何一个类在声明后，都生成一个构造器，默认是空参构造器
 
 ```java
 public class ClassInitTest {
@@ -174,7 +174,7 @@ public class ClinitTest1 {
 }
 ```
 
-我们输出结果为 2，也就是说首先加载 ClinitTest1 的时候，会找到 main 方法，然后执行 Son 的初始化，但是Son 继承了 Father，因此还需要执行 Father 的初始化，同时将 A 赋值为2。我们通过反编译得到 Father 的加载过程，首先我们看到原来的值被赋值成1，然后又被复制成2，最后返回
+我们输出结果为 2，也就是说首先加载 ClinitTest1 的时候，会找到 main 方法，然后执行 Son 的初始化，但是Son 继承了 Father，因此还需要执行 Father 的初始化，同时将 A 赋值为 2。我们通过反编译得到 Father 的加载过程，首先我们看到原来的值被赋值成 1，然后又被复制成 2，最后返回
 
 ```bash
 iconst_1
@@ -184,7 +184,7 @@ putstatic #2 <com/atguigu/java/chapter02/ClinitTest1$Father.A>
 return
 ```
 
-虚拟机必须保证一个类的<clinit>（）方法在多线程下被同步加锁。
+虚拟机必须保证一个类的``<clinit>()``方法在多线程下被同步加锁。
 
 ```java
 public class DeadThreadTest {
@@ -247,7 +247,7 @@ public class ClassLoaderTest {
         ClassLoader extClassLoader = systemClassLoader.getParent();
         System.out.println(extClassLoader);
 
-        // 试图获取 根加载器
+        // 试图获取根加载器
         ClassLoader bootstrapClassLoader = extClassLoader.getParent();
         System.out.println(bootstrapClassLoader);
 
@@ -268,7 +268,7 @@ public class ClassLoaderTest {
 
 ### 虚拟机自带的加载器
 
-#### 启动类加载器（引导类加载器，Bootstrap ClassLoader）
+### 启动类加载器（引导类加载器，Bootstrap ClassLoader）
 
 - 这个类加载使用 C/C++ 语言实现的，嵌套在 JVM 内部。
 - 它用来加载 Java 的核心库（JAVAHOME/jre/lib/rt.jar、resources.jar 或 sun.boot.class.path 路径下的内容），用于提供 JVM 自身需要的类
@@ -380,7 +380,7 @@ Java 虚拟机对 class 文件采用的是**按需加载**的方式，也就是�
 
 ### 沙箱安全机制
 
-自定义 String 类，但是在加载自定义 String 类的时候会率先使用引导类加载器加载，而引导类加载器在加载的过程中会先加载 JDK 自带的文件（rt.jar包中java\lang\String.class），报错信息说没有 main 方法，就是因为加载的是 rt.jar 包中的 String 类。这样可以保证对 Java 核心源代码的保护，这就是沙箱安全机制。
+自定义 String 类，但是在加载自定义 String 类的时候会率先使用引导类加载器加载，而引导类加载器在加载的过程中会先加载 JDK 自带的文件（rt.jar 包中 java\lang\String.class），报错信息说没有 main 方法，就是因为加载的是 rt.jar 包中的 String 类。这样可以保证对 Java 核心源代码的保护，这就是沙箱安全机制。
 
 ### 双亲委派机制的优势
 

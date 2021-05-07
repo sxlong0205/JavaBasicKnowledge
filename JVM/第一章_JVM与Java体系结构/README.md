@@ -65,11 +65,11 @@ C 语言需要自己来分配内存和回收内存，Java 全部交给 JVM 进�
 Java 是目前应用最为广泛的软件开发平台之一。随着 Java 以及 Java 社区的不断壮大 Java 也早已不再是简简单单的一门计算机语言了，它更是一个平台、一种文化、一个社区。
 
 - 作为一个平台，Java 虚拟机扮演着举足轻重的作用
-  - Groovy、Scala、JRuby、Kotlin等都是Java平台的一部分
+  - Groovy、Scala、JRuby、Kotlin 等都是 Java 平台的一部分
 
 - 作为一种文化，Java 几乎成为了“开源”的代名词。
-  - 第三方开源软件和框架。如Tomcat、Struts，MyBatis，Spring等。
-  - 就连 JDK 和 JVM 自身也有不少开源的实现，如OpenJDK、Harmony。
+  - 第三方开源软件和框架。如 Tomcat、Struts，MyBatis，Spring 等。
+  - 就连 JDK 和 JVM 自身也有不少开源的实现，如 OpenJDK、Harmony。
 - 作为一个社区，Java 拥有全世界最多的技术拥护者和开源社区支持，有数不清的论坛和资料。从桌面应用软件、嵌入式开发到企业级应用、后台服务器、中间件，都可以看到 Java 的身影。其应用形式之复杂、参与人数之众多也令人咂舌。
 
 ![image-20200704151731216](https://gitee.com/xlshi/blog_img/raw/master/img/20201009111719.png)
