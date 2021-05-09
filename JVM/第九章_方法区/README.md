@@ -136,8 +136,8 @@ public class OOMTest extends ClassLoader {
 对每个加载的类型（类 class、接口 interface、枚举 enum、注解 annotation），JVM 必须在方法区中存储以下类型信息：
 
 - 这个类型的完整有效名称（全名=包名.类名）
-- 这个类型直接父类的完整有效名（对于interface或是java.lang.object，都没有父类）
-- 这个类型的修饰符（public，abstract，final的某个子集）
+- 这个类型直接父类的完整有效名（对于 interface 或是 java.lang.object，都没有父类）
+- 这个类型的修饰符（public，abstract，final 的某个子集）
 - 这个类型直接接口的一个有序列表
 
 ### 域（Field）信息
