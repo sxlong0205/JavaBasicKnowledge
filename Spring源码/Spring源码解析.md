@@ -297,3 +297,287 @@ AOP 是发生在 Bean 的生命周期过程中的：
 6.  代理对象中有一个 target 属性指向了 target 对象
 
 ## 你知道哪几种定义 Bean 的方式？
+
+JavaBean：
+
+```java
+public class User {
+    private String name;
+    private Integer age;
+
+    public User(String name, Integer age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public User() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+}
+```
+
+SpringBean：
+
+XML 形式：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="user" class="org.codedragon.model.User">
+        <constructor-arg name="name" value="张三"/>
+        <constructor-arg name="age" value="25"/>
+    </bean>
+</beans>
+```
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        User user = (User) context.getBean("user");
+        System.out.println(user.toString());
+    }
+}
+```
+
+注解形式：
+
+```java
+@Configuration
+public class SpringConfig {
+
+    @Bean
+    public User getUser() {
+        return new User("张三", 24);
+    }
+}
+```
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
+        User bean = context.getBean(User.class);
+        System.out.println(bean.toString());
+    }
+}
+```
+
+@Bean、@Component：
+
+```java
+@Component
+public class User {
+    private String name;
+    private Integer age;
+
+    public User(String name, Integer age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public User() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+}
+```
+
+BeanDefinition：
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        AbstractBeanDefinition beanDefinition = BeanDefinitionBuilder.genericBeanDefinition().getBeanDefinition();
+        beanDefinition.setBeanClass(User.class);
+        context.registerBeanDefinition("user", beanDefinition);
+        context.refresh();
+        User user = (User) context.getBean("user");
+        System.out.println(user);
+    }
+}
+```
+
+FactoryBean：
+
+```java
+@Component
+public class ZhouyuFactoryBean implements FactoryBean {
+    @Override
+    public Object getObject() throws Exception {
+        return new Person();
+    }
+
+    @Override
+    public Class<?> getObjectType() {
+        return Person.class;
+    }
+}
+```
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        AbstractBeanDefinition beanDefinition = BeanDefinitionBuilder.genericBeanDefinition().getBeanDefinition();
+        beanDefinition.setBeanClass(ZhouyuFactoryBean.class);
+        context.registerBeanDefinition("user", beanDefinition);
+        context.refresh();
+        Person user = (Person) context.getBean("user", Person.class);
+        System.out.println(user);
+    }
+}
+```
+
+Supplier：
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.registerBean(User.class, (Supplier) () -> {
+            User user = new User();
+            user.setName("李四");
+            user.setAge(30);
+            return user;
+        });
+        context.refresh();
+        User user = (User) context.getBean("user");
+        System.out.println(user);
+    }
+}
+```
+
+## Spring 容器到底是什么？
+
+- 单例池
+
+  利用 ConcurrentHashMap 实现
+
+- BeanFactory
+
+  生产 Bean
+
+  ```java
+  public class Main {
+      public static void main(String[] args) {
+  
+          DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+          beanFactory.registerSingleton("user", new User());
+          User user = beanFactory.getBean("user", User.class);
+          System.out.println(user);
+      }
+  }
+  ```
+
+- ApplicationContext
+
+  ```java
+  public class Main {
+      public static void main(String[] args) {
+  
+          AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+          AbstractBeanDefinition beanDefinition = BeanDefinitionBuilder.genericBeanDefinition().getBeanDefinition();
+          beanDefinition.setBeanClass(User.class);
+          context.registerBeanDefinition("user", beanDefinition);
+          context.refresh();
+  
+          //获取系统环境变量
+          System.out.println(context.getEnvironment().getSystemEnvironment());
+          //获取 JVM 环境变量
+          System.out.println(context.getEnvironment().getPropertySources());
+  
+          //获取路径资源
+          Resource resource = context.getResource("classpath:applicationContext.xml");
+          System.out.println(resource);
+  
+          //国际化
+          context.getMessage("test", null, Locale.CHINESE);
+  
+          User user = context.getBean("user", User.class);
+          System.out.println(user);
+      }
+  }
+  ```
+
+  - AnnotationConfigApplicationContext
+  - ClassPathXmlApplication ontext
+  - FileSystemXmlApplicationContext
+
+## 一个 Bean 从出生到死亡的全过程
+
+### Bean 创建的生命周期
+
+#### 实例化前
+
+```java
+@Component
+public class LubanBeanProcessor implements InstantiationAwareBeanPostProcessor {
+    @Override
+    public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
+        if (beanName.equals("UserService")) {
+            System.out.println("实例化前");
+        }
+        return null;
+    }
+}
+```
+
+#### 实例化
+
+#### 依赖注入
+
+#### 初始化前
+
+#### 初始化
+
+#### 初始化后
