@@ -473,11 +473,11 @@ LIMIT <limit_number>
 
 - 总结
 
-![image-20210525224854549](images\image-20210525224854549.png)
+![image-20210525224854549](./images/image-20210525224854549.png)
 
 ## Join 图
 
-![image-20210525225114158](images\image-20210525225114158.png)
+![image-20210525225114158](./images/image-20210525225114158.png)
 
 # MySQL 事务
 
