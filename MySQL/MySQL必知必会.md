@@ -124,7 +124,7 @@ InnoDB 物理文件结构为：
 >
 >   char 是固定长度，varchar 长度可变：
 >
->   char（n） 和 varchar（n） 中括号中 n 代表字符的个数，并不代表字节个数，比如 CHAR（30） 就可以存储 30 个字符。
+>   char（n）和 varchar（n）中括号中 n 代表字符的个数，并不代表字节个数，比如 CHAR（30）就可以存储 30 个字符。
 >
 >   存储时，前者不管实际存储数据的长度，直接按 char 规定的长度分配存储空间；而后者会根据实际存储的数据分配最终的空间。
 >
@@ -185,10 +185,10 @@ MySQL 官方对索引的定义为：索引（index）是帮助 MySQL 搞笑获�
 
 -   使用 ALTER 命令
 
-    -   `ALTER TABLE tbl_name ADD PRIMARY KEY （column_list）；`该语句添加一个主键，这意味着索引值必须是唯一的，且不能为 NULL。
-    -   `ALTER TABLE tbl_name ADD UNIQUE index_name（column_list）；`这条语句创建索引的值必须是唯一的（除了 NULL 外，NULL 可能会出现多次）。
-    -   `ALTER TABLE tbl_name ADD INDEX index_name（column_list）；`添加普通索引，索引值可出现多次。
-    -   `ALTER TABLE tbl_name ADD FULLTEXT index_name（column_list）；`该语句指定了索引为 FULLTEXT，用于全文索引。
+    -   `ALTER TABLE tbl_name ADD PRIMARY KEY （column_list）;`该语句添加一个主键，这意味着索引值必须是唯一的，且不能为 NULL。
+    -   `ALTER TABLE tbl_name ADD UNIQUE index_name（column_list）;`这条语句创建索引的值必须是唯一的（除了 NULL 外，NULL 可能会出现多次）。
+    -   `ALTER TABLE tbl_name ADD INDEX index_name（column_list）;`添加普通索引，索引值可出现多次。
+    -   `ALTER TABLE tbl_name ADD FULLTEXT index_name（column_list）;`该语句指定了索引为 FULLTEXT，用于全文索引。
 
 ## 优势
 
@@ -668,8 +668,7 @@ MySQL 从 5.0.3 InnoDB 存储引擎开始支持 XA 协议的分布式事务。�
 
 ![image-20210606225530308](images/image-20210606225530308.png)
 
-如图，MySQL 的分布式事务模型。模型中分三块：应用程序（AP）、资源管理器
-（RM）、事务管理器（TM）：
+如图，MySQL 的分布式事务模型。模型中分三块：应用程序（AP）、资源管理器（RM）、事务管理器（TM）：
 
 - 应用程序：定义了事务的边界，指定需要做哪些事务；
 - 资源管理器：提供了访问事务的方法，通常一个数据库就是一个资源管理器；
@@ -697,13 +696,13 @@ MySQL 从 5.0.3 InnoDB 存储引擎开始支持 XA 协议的分布式事务。�
 
 从对数据操作的粒度分类：
 
-为了尽可能提高数据库的并发度，每次锁定的数据范围越小越好，理论上每次只锁定当前操作的数据的方案会得到最大的并发度，但是管理锁是很耗资源的事情（涉及获取，检查，释放锁等动作），因此数据库系统需要在高并发响应和系统性能两方面进行平衡，这样就产生了"锁粒度（Lock granularity）”的概念。
+为了尽可能提高数据库的并发度，每次锁定的数据范围越小越好，理论上每次只锁定当前操作的数据的方案会得到最大的并发度，但是管理锁是很耗资源的事情（涉及获取，检查，释放锁等动作），因此数据库系统需要在高并发响应和系统性能两方面进行平衡，这样就产生了"锁粒度（Lock Granularity）”的概念。
 
-- 表级锁：开销小，加锁快；不会出现死锁；锁定粒度大，发生锁冲突的概率最高，并发度最低（MyISAM和MEMORY存储引擎采用的是表级锁） ； 
+- 表级锁：开销小，加锁快；不会出现死锁；锁定粒度大，发生锁冲突的概率最高，并发度最低（MyISAM 和 MEMORY 存储引擎采用的是表级锁）；
 - 行级锁：开销大，加锁慢；会出现死锁；锁定粒度最小，发生锁冲突的概率最低，并发度也最高（InnoDB 存储引擎既支持行级锁也支持表级锁，但默认情况下是采用行级锁）；
 - 页面锁：开销和加锁时间界于表锁和行锁之间；会出现死锁；锁定粒度界于表锁和行锁之间，并发度一般。
 
-适用：从锁的角度来说，表级锁更适合于以查询为主，只有少量按索引条件更新数据的应用，如Web应用；而行级锁则更适合于有大量按索引条件并发更新少量不同数据，同时又有并发查询的应用，如一些在线事务处理（OLTP） 系统。
+适用：从锁的角度来说，表级锁更适合于以查询为主，只有少量按索引条件更新数据的应用，如 Web 应用；而行级锁则更适合于有大量按索引条件并发更新少量不同数据，同时又有并发查询的应用，如一些在线事务处理（OLTP） 系统。
 
 |        | 行锁 | 表锁 | 页锁 |
 | :----: | :--: | :--: | :--: |
@@ -716,8 +715,8 @@ MySQL 从 5.0.3 InnoDB 存储引擎开始支持 XA 协议的分布式事务。�
 
 MyISAM 的表锁有两种模式：
 
-- 表共享读锁（Table Read Lock） ：不会阻塞其他用户对同一表的读请求，但会阻塞对同一表的写请求；
-- 表独占写锁（Table Write Lock） ：会阻塞其他用户对同一表的读和写操作；
+- 表共享读锁（Table Read Lock）：不会阻塞其他用户对同一表的读请求，但会阻塞对同一表的写请求；
+- 表独占写锁（Table Write Lock）：会阻塞其他用户对同一表的读和写操作；
 
 MyISAM 表的读操作与写操作之间，以及写操作之间是串行的。当一个线程获得对一个表的写锁后，只有持有锁的线程可以对表进行更新操作。其他线程的读、写操作都会等待，直到锁被释放为止。
 
@@ -727,8 +726,8 @@ MyISAM 表的读操作与写操作之间，以及写操作之间是串行的。�
 
 InnoDB 实现了以下两种类型的行锁：
 
-- 共享锁（S） ：允许一个事务去读一行，阻止其他事务获得相同数据集的排他锁。
-- 排他锁（X） ：允许获得排他锁的事务更新数据，阻止其他事务取得相同数据集的共享读锁和排他写锁。
+- 共享锁（S）：允许一个事务去读一行，阻止其他事务获得相同数据集的排他锁。
+- 排他锁（X）：允许获得排他锁的事务更新数据，阻止其他事务取得相同数据集的共享读锁和排他写锁。
 
 为了允许行锁和表锁共存，实现多粒度锁机制，InnoDB 还有两种内部使用的意向锁（Intention Locks） ，这两种意向锁都是表锁：
 
@@ -749,7 +748,7 @@ InnoDB 实现了以下两种类型的行锁：
 - 记录锁（Record Locks）： 单个行记录上的锁。对索引项加锁，锁定符合条件的行。其他事务不能修改和删除加锁项；
 
     ```sql
-    SELECT * FROM table WHERE id = 1 FOR UPDATE；
+    SELECT * FROM table WHERE id = 1 FOR UPDATE;
     ```
 
     它会在 id=1 的记录上加上记录锁，以阻止其他事务插入，更新，删除 id=1 这一行。
@@ -758,7 +757,7 @@ InnoDB 实现了以下两种类型的行锁：
 
     ```sql
     -- id 列为主键列或唯一索引列
-    UPDATE SET age = 50 WHERE id = 1；
+    UPDATE SET age = 50 WHERE id = 1;
     ```
 
 - 间隙锁（Gap Locks） ：当我们使用范围条件而不是相等条件检索数据，并请求共享或排他锁时，InnoDB 会给符合条件的已有数据记录的索引项加锁。对于键值在条件范围内但并不存在的记录，叫做"间隙" InnoDB 也会对这个“间隙"加锁，这种锁机制就是所谓的间隙锁。
@@ -768,7 +767,7 @@ InnoDB 实现了以下两种类型的行锁：
     间隙锁基于非唯一索引， 它锁定一段范围内的索引记录。间隙锁基于下面将会提到的 Next-Key Locking 算法，请务必牢记：使用间隙锁锁住的是一个区间，而不仅仅是这个区间中的每一条数据。
 
     ```sql
-    SELECT * FROM table WHERE id BETWEEN 1 AND 10 FOR UPDATE；
+    SELECT * FROM table WHERE id BETWEEN 1 AND 10 FOR UPDATE;
     ```
 
     即所有在（1，10）区间内的记录行都会被锁住，所有 id 为 2、3、4、5、6、7、8、9 的数据行的插入会被阻塞，但是 1 和 10 两条记录行并不会被锁住。
@@ -826,7 +825,7 @@ InnoDB 实现了以下两种类型的行锁：
 
 死锁恢复：死锁发生以后，只有部分或完全回滚其中一个事务，才能打破死锁，InnoDB 目前处理死锁的方法是，将持有最少行级排他锁的事务进行回滚。所以事务型应用程序在设计时必须考虑如何处理死锁，多数情况下只需要重新执行因死锁回滚的事务即可。
 
-外部锁的死锁检测：发生死锁后，InnoDB 一般都能自动检测到，并使一个事务释放锁并回退，另一个事务获得锁，继续完成事务。但在涉及外部锁，或涉及表锁的情况下，InnoDB 并不能完全自动检测到死锁，这需要通过设置锁等待超时参数 innodb_lock_wait_timeout 来解决。
+外部锁的死锁检测：发生死锁后，InnoDB 一般都能自动检测到，并使一个事务释放锁并回退，另一个事务获得锁，继续完成事务。但在涉及外部锁，或涉及表锁的情况下，InnoDB 并不能完全自动检测到死锁，这需要通过设置锁等待超时参数`innodb_lock_wait_timeout`来解决。
 
 死锁影响性能：死锁会影响性能而不是会产生严重错误，因为 InnoDB 会自动检测死锁状况并回滚其中一个受影响的事务。在高并发系统上，当许多线程等待同一个锁时，死锁检测可能导致速度变慢。有时当发生死锁时，禁用死锁检测（使用
 `innodb_deadlock_detect`配置选项）可能会更有效，这时可以依赖`innodb_lock_wait_timeout`设置进行事务回滚。
@@ -877,7 +876,7 @@ InnoDB 避免死锁：
 
 -   CPU：CPU 在饱和的时候一般发生在数据装入内存或从磁盘上读取数据时候。
 -   IO：磁盘 I/O 瓶颈发生在装入数据远大于内存容量的时候。
--   服务器硬件的性能瓶颈：top， free， iostat 和 vmstat 来查看系统的性能状态
+-   服务器硬件的性能瓶颈：top，free，iostat 和 vmstat 来查看系统的性能状态。
 
 ### 性能下降 SQL 慢、执行时间长、等待时间长原因分析
 
@@ -940,12 +939,12 @@ Shell> mysqladmin extended-status -u username -p password ——显示状态信�
     -   UNION RESULT：从 UNION 表获取结果的 select
 
 -   table （显示这一行的数据是关于哪张表的）
--   type （显示查询使用了那种类型，从最好到最差依次排列 system > const > eq_ref > ref > fulltext > ref_or_null > index_merge > unique_subquery > index_subquery > range > index > ALL）
+-   type （显示查询使用了那种类型，从最好到最差依次排列 `system > const > eq_ref > ref > fulltext > ref_or_null > index_merge > unique_subquery > index_subquery > range > index > ALL`）
     -   system：表只有一行记录（等于系统表），是 const 类型的特例，平时不会出现
     -   const：表示通过索引一次就找到了，const 用于比较 primary key 或 unique 索引，因为只要匹配一行数据，所以很快，如将主键置于 where 列表中，MySQL 就能将该查询转换为一个常量
     -   eq_ref：唯一性索引扫描，对于每个索引键，表中只有一条记录与之匹配，常见于主键或唯一索引扫描
     -   ref：非唯一性索引扫描，范围匹配某个单独值得所有行。本质上也是一种索引访问，他返回所有匹配某个单独值的行，然而，它可能也会找到多个符合条件的行，多以他应该.属于查找和扫描的混合体
-    -   range：只检索给定范围的行，使用一一个索引来选择行。key列显示使用了哪个索引，一般就是在你的where语句中出现了between、<、>、in等的查询，这种范围扫描索引比全表扫描要好，因为它只需开始于索引的某- -点，而结束于另一点，不用扫描全部索引
+    -   range：只检索给定范围的行，使用一一个索引来选择行。key列显示使用了哪个索引，一般就是在你的where语句中出现了 between、<、>、in 等的查询，这种范围扫描索引比全表扫描要好，因为它只需开始于索引的某一点，而结束于另一点，不用扫描全部索引
     -   index：Full Index Scan，index 于 ALL 区别为 index 类型只遍历索引树。通常比 ALL 快，因为索引文件通常比数据文件小。（也就是说虽然 ALL 和 index 都是读全表，但 index 是从索引中读取的，而 ALL 是从硬盘中读的）
     -   ALL：Full Table Scan，将遍历全表找到匹配的行
 
@@ -957,7 +956,7 @@ Shell> mysqladmin extended-status -u username -p password ——显示状态信�
 
     -   查询中若使用了覆盖索引，则该索引和查询的 select 字段重叠，仅出现在 key 列表中
 
-        ![image-20210606225759785]（images/image-20210606225759785.png）
+        ![image-20210606225759785](images/image-20210606225759785.png)
 
 -   key_len
     -   表示索引中使用的字节数，可通过该列计算查询中使用的索引的长度。在不损失精确性的情况下，长度越短越好
@@ -972,26 +971,25 @@ Shell> mysqladmin extended-status -u username -p password ——显示状态信�
     4. using where：使用了where 过滤
     5. using join buffer： 使用了连接缓存
     6. impossible where： where 子句的值总是 false，不能用来获取任何元祖
-    7. select tables optimized away： 在没有 group by 子句的情况下，基于索引优化操作或对于 MyISAM 存储引擎优化 COUNT（*） 操作，不必等到执行阶段再进行计算，查询执行计划生成的阶段即完成优化
+    7. select tables optimized away： 在没有 group by 子句的情况下，基于索引优化操作或对于 MyISAM 存储引擎优化 `COUNT（*）`操作，不必等到执行阶段再进行计算，查询执行计划生成的阶段即完成优化
     8. distinct：优化 distinct 操作，在找到第一匹配的元祖后即停止找同样值的动作
 
 -   case：
 
     ![image-20210606225826555](images/image-20210606225826555.png)
 
-1.  第一行（执行顺序 4） ： id 列为 1，表示是 union 里的第一个 select， select_type 列的 primary 表示该查询为外层查询，table 列被标记为，表示查询结果来自一个衍生表，其中 derived3 中 3 代表该查询衍生自第三个 select 查询，即 id 为 3 的 select。[select d1.nam.....]
-2.  第二行（执行顺序 2） ： id 为 3，是整个查询中第三个select的一部分。因查询包含在 from 中，所以为 derived 。[ select id，name from t1 where
-    other column="）]
-3.  第三行（执行顺序 3） ： select 列表中的子查询 select_type 为 subquery， 为整个查询中的第二个 select。[select id from t3]
-4.  第四行（执行顺序 1） ： select_type 为 union，说明第四个 select 是 union 里的第二个 select， 最先执行[select name，id from t2]
-5.  第五行（执行顺序 5） ：代表从 union 的临时表中读取行的阶段，table 列的 <union1，4> 表示用第一个和第四个 select 的结果进行 union 操作。[ 两个结果union操作]
+1.  第一行（执行顺序 4） ： id 列为 1，表示是 union 里的第一个 select， select_type 列的 primary 表示该查询为外层查询，table 列被标记为，表示查询结果来自一个衍生表，其中 derived3 中 3 代表该查询衍生自第三个 select 查询，即 id 为 3 的 select。`[select d1.nam.....]`
+2.  第二行（执行顺序 2） ： id 为 3，是整个查询中第三个select的一部分。因查询包含在 from 中，所以为 derived 。`[ select id，name from t1 where other column="）]`
+3.  第三行（执行顺序 3） ： select 列表中的子查询 select_type 为 subquery， 为整个查询中的第二个 select。`[select id from t3]`
+4.  第四行（执行顺序 1） ： select_type 为 union，说明第四个 select 是 union 里的第二个 select， 最先执行`[select name，id from t2]`
+5.  第五行（执行顺序 5） ：代表从 union 的临时表中读取行的阶段，table 列的 <union1，4> 表示用第一个和第四个 select 的结果进行 union 操作。[两个结果union操作]
 
 **慢查询日志**
 
-MySQL 的慢查询日志是 MySQL 提供的一种日志记录，它用来记录在 MySQL 中响应时间超过阈值的语句，具体指运行时间超过 long_query_time 值的 SQL，则
+MySQL 的慢查询日志是 MySQL 提供的一种日志记录，它用来记录在 MySQL 中响应时间超过阈值的语句，具体指运行时间超过 `long_query_time` 值的 SQL，则
 会被记录到慢查询日志中。
 
--   long_query_time 的默认值为 10，意思是运行 10 秒以上的语句
+-   `long_query_time` 的默认值为 10，意思是运行 10 秒以上的语句
 -   默认情况下，MySQL 数据库没有开启慢查询日志，需要手动设置参数开启
 
 **查看开启状态**
@@ -1028,11 +1026,11 @@ SHOW VARIABLED LIKE '%slow_query_long%'；
 注：log-slow-queries 参数为慢查询日志存放的位置，一般这个目录要有 MySQL 的运行帐号的可写权限，一般都将这个目录设置为 MySQL 的数据存放目录；
 long_query_time = 2 中的 2 表示查询超过两秒才记录；在 my.cnf 或者 my.ini 中添加 log-queries-not-using-indexes 参数，表示记录下没有使用索引的查询。
 
-可以用 select sleep（4） 验证是否成功开启。
+可以用 `select sleep（4）` 验证是否成功开启。
 
 在生产环境中，如果手工分析日志，查找、分析 SQL，还是比较费劲的，所以 MySQL 提供了日志分析工具 mysqldumpslow。
 
-通过 mysqIdumpslow --help 查看操作帮助信息
+通过 `mysqIdumpslow --help` 查看操作帮助信息
 
 -   得到返回记录集最多的 10 个 SQL
 
@@ -1087,20 +1085,20 @@ long_query_time = 2 中的 2 表示查询超过两秒才记录；在 my.cnf 或�
 
     -   locked
 
-        诊断 SQL，show profile cpu，block io for query id（上一步前面的问题 SQL 数字号码）
+        诊断 `SQL，show profile cpu，block io for query id`（上一步前面的问题 SQL 数字号码）
 
 日常开发需要注意的结论：
 
-1.  是否支持，看看当前的 MySQL |版本是否支持
+1.  是否支持，看看当前的 MySQL 版本是否支持
 
     ```sql
-    mysql>show variables like 'profiling'； -- 默认是关闭，使用前需要开启
+    mysql > show variables like 'profiling'; -- 默认是关闭，使用前需要开启
     ```
 
 2.  开启功能，默认是关闭，使用前需要开启
 
     ```sql
-    mysql>set profiling=1；
+    mysql > set profiling=1；
     ```
 
 3.  运行 SQL
@@ -1115,11 +1113,11 @@ long_query_time = 2 中的 2 表示查询超过两秒才记录；在 my.cnf 或�
 2.  最佳左前缀法则，比如建立了一个联合索引（a，b，c），那么其实我们可利用的索引就有（a），（a，b），（a，b，c）
 3.  不在索引列上做任何操作（计算、函数、（自动 or 手动）类型转换），会导致索引失效而转向全表扫描
 4.  存储引擎不能使用索引中范围条件右边的列
-5.  尽量使用覆盖索引（只访问索引的查询（索引列和查询列一致）），减少select
-6.  is null ，is not null也无法使用索引
-7.  like "xxxx%"是可以用到索引的，like "%xxxx"则不行（like "%xxx%"同理）。like 以通配符开头（'%ab...'）索引失效会变成全表扫描的操作
+5.  尽量使用覆盖索引（只访问索引的查询（索引列和查询列一致）），减少 select
+6.  is null，is not null也无法使用索引
+7.  `like "xxxx%"`是可以用到索引的，`like "%xxxx"`则不行（`like "%xxx%"`同理）。`like` 以通配符开头`（'%ab...'）`索引失效会变成全表扫描的操作
 8.  字符串不加单引号索引失效
-9.  少用 or，用它来连接时会索引失效<，<=，=，>，>=，BETWEEN， IN 可用到索引，<>，not in，!= 则不行，会导致全表扫描
+9.  少用 or，用它来连接时会索引失效 <，<=，=，>，>=，BETWEEN， IN 可用到索引，<>，not in，!= 则不行，会导致全表扫描
 
 **一般性建议**
 
@@ -1165,13 +1163,13 @@ select * from B where B.id = A.id
         序，然后扫描排序后的列表进行输出，效率高于双路排序
 
 -   优化策略
--   增大 sort_buffer_size 参数的设置
--   增大 max_lencth_for_sort_data 参数的设置
+-   增大 `sort_buffer_size` 参数的设置
+-   增大 `max_lencth_for_sort_data` 参数的设置
 
 **group by 关键字优化**
 
 -   group by 实质是先排序后进行分组，遵照索引建的最佳左前缀
--   当无法使用索引列，增大 max_length_for_sort_data 参数的设置， 增大 sort_buffer_size 参数的设置
+-   当无法使用索引列，增大 `max_length_for_sort_data` 参数的设置， 增大 `sort_buffer_size` 参数的设置
 -   where 高于 having，能写在 where 限定的条件就不要去 having 限定了
 
 ### 数据类型优化
@@ -1236,7 +1234,7 @@ MySQL 支持的数据类型非常多，选择正确的数据类型对于获取�
 
 -   分区表，分区键设计不太灵活，如果不走分区键，很容易出现全表锁
 -   一旦数据并发量上来，如果在分区表实施关联，就是一个灾难
--   自己分库分表，自己掌控业务场景与访问模式，可控。分区表，研发写了一个 SQL|，都不确定 MySQL 是怎么玩的，不太可控
+-   自己分库分表，自己掌控业务场景与访问模式，可控。分区表，研发写了一个 SQL，都不确定 MySQL 是怎么玩的，不太可控
 
 >   随着业务的发展，业务越来越复杂，应用的模块越来越多，总的数据量很大，高并发读写操作均超过单个数据库服务器的处理能力怎么办?
 >
@@ -1259,9 +1257,9 @@ MySQL 支持的数据类型非常多，选择正确的数据类型对于获取�
 水平分割的几种方法：
 
 -   使用 MD5 哈希，做法是对 UID 进行 MD5 加密，然后取前几位（我们这里取前两位）然后就可以将不同的UID哈希到不同的用户表（user_xx） 中了。
--   还可根据时间放入不同的表，比如： article_201601，article_201602。
+-   还可根据时间放入不同的表，比如：`article_201601`，`article_201602`。
 -   按热度拆分，高点击率的词条生成各自的一张表，低热度的词条都放在一张大表里，待低热度的词条达到一定的贴数后，再把低热度的表单独拆分成一-张表。
--   根据 ID 的值放入对应的表，第一个表user_0000，第二个 100 万的用户数据放在第二个表 user_0001 中，随用户增加，直接添加用户表就行了。
+-   根据 ID 的值放入对应的表，第一个表 `user_0000`，第二个 100 万的用户数据放在第二个表 `user_0001` 中，随用户增加，直接添加用户表就行了。
 
 ![image-20210606230850730](images/image-20210606230850730.png)
 
@@ -1269,7 +1267,7 @@ MySQL 支持的数据类型非常多，选择正确的数据类型对于获取�
 
 >   为什么要分库？
 >
->   数据库集群环境后都是多台 slave， 基本满足了读取操作;但是写 入或者说大数据、频繁的写入操作对 master 性能影响就比较大，这个时候，单库并不能解决大规模并发写入的问题，所以就会考虑分库。
+>   数据库集群环境后都是多台 slave， 基本满足了读取操作；但是写 入或者说大数据、频繁的写入操作对 master 性能影响就比较大，这个时候，单库并不能解决大规模并发写入的问题，所以就会考虑分库。
 
 >   分库是什么？
 >
@@ -1289,13 +1287,13 @@ MySQL 支持的数据类型非常多，选择正确的数据类型对于获取�
 
 ## 复制的基本原理
 
--   slave 会从 master 读取 binlog 来进行数据同步
+-   slave 会从 master 读取 binary log 来进行数据同步
 -   三个步骤
 
 ![image-20210606231259032](images/image-20210606231259032.png)
 
 1. master 将改变记录到二进制日志（binary log）。这些记录过程叫做二进制日志事件，binary log events;
-2. salve 将 master 的 binary log events 拷贝到它的中继日志（relay log） ;
+2. slave 将 master 的 binary log events 拷贝到它的中继日志（relay log） ;
 3. slave 重做中继日志中的事件，将改变应用到自己的数据库中。MySQL 复制是异步且是串行化的。
 
 ## 复制的基本原则
