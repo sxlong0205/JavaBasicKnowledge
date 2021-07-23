@@ -3,15 +3,15 @@
 ## String 的基本特性
 
 - String：字符串，使用一对 "" 引起来表示
-  - String s1 = "mogublog" ;   // 字面量的定义方式
-  - String s2 =  new String("moxi"); 
+  - `String s1 = "mogublog"; `  // 字面量的定义方式
+  - `String s2 =  new String("moxi"); `
 - String 声明为 final 的，不可被继承
 - String 实现了 Serializable 接口：表示字符串是支持序列化的。实现了 Comparable 接口：表示 String 可以比较大小
-- String 在 JDK 8 及以前内部定义了 final char[] value 用于存储字符串数据。JDK 9 时改为 byte[]
+- String 在 JDK 8 及以前内部定义了` final char[] value` 用于存储字符串数据。JDK 9 时改为 `byte[]`
 
 ### 为什么 JDK 9 改变了结构
 
-String 类的当前实现将字符存储在 char 数组中，每个字符使用两个字节(16 位)。从许多不同的应用程序收集的数据表明，字符串是堆使用的主要组成部分，而且，大多数字符串对象只包含拉丁字符。这些字符只需要一个字节的存储空间，因此这些字符串对象的内部 char 数组中有一半的空间将不会使用。
+String 类的当前实现将字符存储在 char 数组中，每个字符使用两个字节（16 位）。从许多不同的应用程序收集的数据表明，字符串是堆使用的主要组成部分，而且，大多数字符串对象只包含拉丁字符。这些字符只需要一个字节的存储空间，因此这些字符串对象的内部 char 数组中有一半的空间将不会使用。
 
 >   Motivation
 >
@@ -21,9 +21,9 @@ String 类的当前实现将字符存储在 char 数组中，每个字符使用�
 >
 >   We propose to change the internal representation of the String class from a UTF-16 char array to a byte array plus an encoding-flag field. The new String class will store characters encoded either as ISO-8859-1/Latin-1 (one byte per character), or as UTF-16(two bytes per character), based upon the contents of the string. The encoding flag will indicate which encoding is used.
 
-我们建议改变字符串的内部表示 Class 从 UTF-16 字符数组到字节数组+一个 encoding-flag 字段。新的 String 类将根据字符串的内容存储编码为 ISO-8859-1/Latin-1(每个字符一个字节)或  UTF-16 (每个字符两个字节)的字符。编码标志将指示使用哪种编码。
+我们建议改变字符串的内部表示 Class 从 UTF-16 字符数组到字节数组+一个 encoding-flag 字段。新的 String 类将根据字符串的内容存储编码为 ISO-8859-1/Latin-1（每个字符一个字节）或  UTF-16 （每个字符两个字节）的字符。编码标志将指示使用哪种编码。
 
-结论：String 再也不用 char[] 来存储了，改成了 byte [] 加上编码标记，节约了一些空间
+结论：String 再也不用 `char[]` 来存储了，改成了 `byte[]` 加上编码标记，节约了一些空间
 
 ```java
 // 之前
@@ -40,7 +40,7 @@ String：代表不可变的字符序列。简称：不可变性。
 
 -   当对字符串重新赋值时，需要重写指定内存区域赋值，不能使用原有的 value 进行赋值。
 -   当对现有的字符串进行连接操作时，也需要重新指定内存区域赋值，不能使用原有的 value 进行赋值。
--   当调用 String 的 replace() 方法修改指定字符或字符串时，也需要重新指定内存区域赋值，不能使用原有的 value 进行赋值。
+-   当调用 String 的 `replace()` 方法修改指定字符或字符串时，也需要重新指定内存区域赋值，不能使用原有的 value 进行赋值。
 
 通过字面量的方式（区别于 new）给一个字符串赋值，此时的字符串值声明在字符串常量池中。
 
@@ -133,9 +133,9 @@ best
 
 **字符串常量池是不会存储相同内容的字符串的。**
 
-String 的 String Pool 是一个固定大小的 Hashtable ，默认值大小长度是 1009。如果放进 String Pool 的 String 非常多，就会造成 Hash 冲突严重，从而导致链表会很长，而链表长了后直接会造成的影响就是当调用 String.intern 时性能会大幅下降。
+String 的 String Pool 是一个固定大小的 Hashtable ，默认值大小长度是 1009。如果放进 String Pool 的 String 非常多，就会造成 Hash 冲突严重，从而导致链表会很长，而链表长了后直接会造成的影响就是当调用 `String.intern()` 时性能会大幅下降。
 
-使用 -XX:StringTablesize 可设置 StringTable 的长度。
+使用 `-XX:StringTablesize` 可设置 StringTable 的长度。
 
 在 JDK 6 中 StringTable 是固定的，就是 1009 的长度，所以如果常量池中的字符串过多就会导致效率下降很快。StringTablesize 设置没有要求。
 
@@ -150,7 +150,7 @@ String 的 String Pool 是一个固定大小的 Hashtable ，默认值大小长�
 常量池就类似一个 Java 系统级别提供的缓存。8 种基本数据类型的常量池都是系统协调的，**String 类型的常量池比较特殊。它的主要使用方法有两种。**
 
 -   直接使用双引号声明出来的 String 对象会直接存储在常量池中。
-    -   比如：String info = "atguigu.com"；
+    -   比如：`String info = "atguigu.com";`
 
 -   如果不是用双引号声明的 String 对象，**可以使用 String 提供的 intern() 方法**。
 
@@ -159,7 +159,7 @@ Java 6 及以前，字符串常量池存放在永久代。
 Java 7 中 Oracle 的工程师对字符串池的逻辑做了很大的改变，即将**字符串常量池的位置调整到 Java 堆内**。
 
 -   所有的字符串都保存在堆（Heap）中，和其他普通对象一样，这样可以让你在进行调优应用时仅需要调整堆大小就可以了。
--   字符串常量池概念原本使用得比较多，但是这个改动使得我们有足够的理由让我们重新考虑在 Java 7 中使用 String.intern()。
+-   字符串常量池概念原本使用得比较多，但是这个改动使得我们有足够的理由让我们重新考虑在 Java 7 中使用 `String.intern()`。
 
 Java 8 元空间，字符串常量在堆。
 
@@ -169,7 +169,7 @@ Java 8 元空间，字符串常量在堆。
 
 ### 为什么 StringTable 从永久代调整到堆中
 
-在 JDK 7 中，interned 字符串不再在 Java 堆的永久代中分配，而是在 Java 堆的主要部分(称为年轻代和年老代)中分配，与应用程序创建的其他对象一起分配。此更改将导致驻留在主 Java 堆中的数据更多，驻留在永久生成中的数据更少，因此可能需要调整堆大小。由于这一变化，大多数应用程序在堆使用方面只会看到相对较小的差异，但加载许多类或大量使用字符串的较大应用程序会出现这种差异。intern() 方法会看到更显著的差异。
+在 JDK 7 中，interned 字符串不再在 Java 堆的永久代中分配，而是在 Java 堆的主要部分（称为年轻代和年老代）中分配，与应用程序创建的其他对象一起分配。此更改将导致驻留在主 Java 堆中的数据更多，驻留在永久生成中的数据更少，因此可能需要调整堆大小。由于这一变化，大多数应用程序在堆使用方面只会看到相对较小的差异，但加载许多类或大量使用字符串的较大应用程序会出现这种差异。`intern()` 方法会看到更显著的差异。
 
 - 永久代的默认比较小
 - 永久代垃圾回收频率低
@@ -201,7 +201,7 @@ class Memory {
 - 常量与常量的拼接结果在常量池，原理是编译期优化
 - 常量池中不会存在相同内容的变量
 - 只要其中有一个是变量，结果就在堆中。变量拼接的原理是 StringBuilder
-- 如果拼接的结果调用 intern() 方法，则**主动将常量池中还没有的字符串对象放入池中，并返回此对象地址**
+- 如果拼接的结果调用 `intern()` 方法，则**主动将常量池中还没有的字符串对象放入池中，并返回此对象地址**
 
 ```java
 public static void test1() {
@@ -238,9 +238,9 @@ public static void test2() {
 
 从上述的结果我们可以知道：
 
-如果拼接符号的前后出现了变量，则相当于在堆空间中 new String() ，具体的内容为拼接的结果
+如果拼接符号的前后出现了变量，则相当于在堆空间中 `new String()` ，具体的内容为拼接的结果
 
-而调用 intern() 方法，则会判断字符串常量池中是否存在 "javaEEhadoop" 值，如果存在则返回常量池中的值，否者就在常量池中创建
+而调用 `intern()` 方法，则会判断字符串常量池中是否存在 "javaEEhadoop" 值，如果存在则返回常量池中的值，否者就在常量池中创建
 
 ### 底层原理
 
@@ -306,7 +306,7 @@ public static void method2(int highLevel) {
 
 结论：
 
-- 通过 StringBuilder 的 append() 方式添加字符串的效率，要远远高于 String 的字符串拼接方法
+- 通过 StringBuilder 的 `append()` 方式添加字符串的效率，要远远高于 String 的字符串拼接方法
 
 好处：
 
@@ -321,19 +321,19 @@ public static void method2(int highLevel) {
 
 ## intern() 的使用
 
-intern() 是一个 native 方法，调用的是底层 C 的方法。
+`intern()` 是一个 native 方法，调用的是底层 C 的方法。
 
-字符串池最初是空的，由 String 类私有地维护。在调用 intern() 方法时，如果池中已经包含了由 equals(object) 方法确定的与该字符串对象相等的字符串，则返回池中的字符串。否则，该字符串对象将被添加到池中，并返回对该字符串对象的引用。
+字符串池最初是空的，由 String 类私有地维护。在调用 `intern()` 方法时，如果池中已经包含了由 `equals(object)` 方法确定的与该字符串对象相等的字符串，则返回池中的字符串。否则，该字符串对象将被添加到池中，并返回对该字符串对象的引用。
 
-如果不是用双引号声明的 String 对象，可以使用 String 提供的 intern() 方法：intern() 方法会从字符串常量池中查询当前字符串是否存在，若不存在就会将当前字符串放入常量池中。
+如果不是用双引号声明的 String 对象，可以使用 String 提供的 `intern()` 方法：`intern()` 方法会从字符串常量池中查询当前字符串是否存在，若不存在就会将当前字符串放入常量池中。
 
 比如：
 
-```
+```java
 String myInfo = new string("I love atguigu").intern();
 ```
 
-也就是说，如果在任意字符串上调用 String.intern() 方法，那么其返回结果所指向的那个类实例，必须和直接以常量形式出现的字符串实例完全相同。因此，下列表达式的值必定是 true。
+也就是说，如果在任意字符串上调用 `String.intern()` 方法，那么其返回结果所指向的那个类实例，必须和直接以常量形式出现的字符串实例完全相同。因此，下列表达式的值必定是 true。
 
 ```java
 （"a"+"b"+"c"）.intern（）=="abc"
@@ -398,9 +398,9 @@ public class StringIntern2 {
 }
 ```
 
-**结论**：对于程序中大量使用存在的字符串时，尤其存在很多已经重复的字符串时，使用 intern() 方法能够节省内存空间。
+**结论**：对于程序中大量使用存在的字符串时，尤其存在很多已经重复的字符串时，使用 `intern()` 方法能够节省内存空间。
 
-大的网站平台，需要内存中存储大量的字符串。比如社交网站，很多人都存储：北京市、海淀区等信息。这时候如果字符串都调用 intern() 方法，就会很明显降低内存的大小。
+大的网站平台，需要内存中存储大量的字符串。比如社交网站，很多人都存储：北京市、海淀区等信息。这时候如果字符串都调用 `intern()` 方法，就会很明显降低内存的大小。
 
 ## 面试题
 
@@ -420,7 +420,7 @@ public class StringNewTest {
 
 我们转换成字节码来查看
 
-```
+```shell
  0 new #2 <java/lang/String>
  3 dup
  4 ldc #3 <ab>
@@ -450,7 +450,7 @@ public class StringNewTest {
 
 字节码文件为
 
-```
+```shell
  0 new #2 <java/lang/StringBuilder>
  3 dup
  4 invokespecial #3 <java/lang/StringBuilder.<init>>
@@ -469,14 +469,14 @@ public class StringNewTest {
 35 return
 ```
 
-我们创建了6个对象
+我们创建了 6 个对象
 
-- 对象1：new StringBuilder()
-- 对象2：new String("a")
+- 对象1：`new StringBuilder()`
+- 对象2：`new String("a")`
 - 对象3：常量池的 a
-- 对象4：new String("b")
+- 对象4：`new String("b")`
 - 对象5：常量池的 b
-- 对象6：toString 中会创建一个 new String("ab")
+- 对象6：toString 中会创建一个 `new String("ab")`
   - 调用 toString 方法，不会在常量池中生成 ab
 
 ### intern() 的使用：JDK 6 和 JDK 7
@@ -552,7 +552,7 @@ System.out.println(s3 == s4);
 
 ### 总结
 
-总结 String 的 intern() 的使用：
+总结 String 的 `intern()` 的使用：
 
 JDK 1.6 中，将这个字符串对象尝试放入串池。
 
@@ -591,7 +591,7 @@ true
 
 ![image-20200711151433277](https://gitee.com/xlshi/blog_img/raw/master/img/20201012142321.png)
 
-## StringTable的垃圾回收
+## StringTable 的垃圾回收
 
 ```java
 /**
@@ -623,7 +623,7 @@ public class StringGCTest {
 
 许多大规模的 Java 应用的瓶颈在于内存，测试表明，在这些类型的应用里面，**Java 堆中存活的数据集合差不多 25% 是 String 对象**。更进一步，这里面差不多一半 String 对象是重复的，重复的意思是说：
 
-string1.equals(string2) = true。堆上存在重复的 String 对象必然是一种内存的浪费。这个项目将在 G1 垃圾收集器中实现自动持续对重复的 String 对象进行去重，这样就能避免浪费内存。
+`string1.equals(string2) = true`。堆上存在重复的 String 对象必然是一种内存的浪费。这个项目将在 G1 垃圾收集器中实现自动持续对重复的 String 对象进行去重，这样就能避免浪费内存。
 
 ### 实现
 
