@@ -1,17 +1,6 @@
----
-zmathjax: true
-toc: true
-categories:
- - Java虚拟机
-tags:
- - Class文件结构
----
-
 # Class 文件结构
 
 ## 概述
-
-<!--more-->
 
 ### 字节码文件的跨平台性
 
