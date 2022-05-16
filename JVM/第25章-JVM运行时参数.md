@@ -62,17 +62,17 @@ HotSpot JVM 有两种模式，分别是 server 和 client，分别通过 -server
 
 **JVM 的 JIT 编译模式相关的选项**
 
-- -Xint：禁用 JIT，所有字节码都被解释执行，这个模式的速度是最慢的。
-- -Xcomp：所有字节码第一次使用就都被编译成本地代码，然后再执行。
-- Xmixed：混合模式，默认模式，让 JIT 根据程序运行的情况，有选择地将某些代码编译成本地代码
+- `-Xint`：禁用 JIT，所有字节码都被解释执行，这个模式的速度是最慢的。
+- `-Xcomp`：所有字节码第一次使用就都被编译成本地代码，然后再执行。
+- `-Xmixed`：混合模式，默认模式，让 JIT 根据程序运行的情况，有选择地将某些代码编译成本地代码
 
 **特别地**
 
 -Xmx -Xms -Xss 属于 XX 参数？
 
-- -Xms<size>：设置初始 Java 堆大小，等价于 `-XX:InitialHeapSize`。
-- -Xmx<size>：设置最大 Java 堆大小，等价于 `-XX:MaxHeapSize`。
-- -Xss<size>：设置 Java 线程堆栈大小，`-XX:ThreadStackSize`。
+- `-Xms<size>`：设置初始 Java 堆大小，等价于 `-XX:InitialHeapSize`。
+- `-Xmx<size>`：设置最大 Java 堆大小，等价于 `-XX:MaxHeapSize`。
+- `-Xss<size>`：设置 Java 线程堆栈大小，`-XX:ThreadStackSize`。
 
 ### 类型三：-XX 参数选项
 
@@ -137,54 +137,81 @@ HotSpot JVM 有两种模式，分别是 server 和 client，分别通过 -server
 
 栈：
 
-- -Xss128k
+- `-Xss128k`
   - 设置每个线程的栈大小为 128k。
-  - 等价于 -XX:ThreadStackSize=128k。
+  - 等价于 `-XX:ThreadStackSize=128k`。
 
 堆内存：
 
-- -Xms3550m：等价于 -XX:InitialHeapSize，设置 JVM 初始堆内存为 3550M。
-- -Xmx3550m：等价于 -XX:MaxHeapSize，设置 JVM 最大堆内存为 3550M。
-- -Xmn2g：
+- `-Xms3550m`：等价于 `-XX:InitialHeapSize`，设置 JVM 初始堆内存为 3550M。
+- `-Xmx3550m`：等价于 `-XX:MaxHeapSize`，设置 JVM 最大堆内存为 3550M。
+- `-Xmn2g`
   - 设置年轻代大小为 2G。
   - 官方推荐配置为整个堆大小的 3/8。
-- -XX:NewSize=1024m：设置年轻代初始值为 1024M。
-- -XX:MaxNewSize=1024m：设置年轻代最大值为 1024M。
-- -XX:SurvivorRatio=8：设置年轻代中 Eden 区与一个 Survivor 区的比值，默认为 8。
-- -XX:+UseAdaptiveSizePolicy：自动选择各区大小比例。
-- -XX:NewRatio=4：设置老年代与年轻代（包括 1 个 Eden 和 2 个 Survivor 区）的比值。
-- -XX:PretenureSizeThreadshold=1024
+- `-XX:NewSize=1024m`：设置年轻代初始值为 1024M。
+- `-XX:MaxNewSize=1024m`：设置年轻代最大值为 1024M。
+- `-XX:SurvivorRatio=8`：设置年轻代中 Eden 区与一个 Survivor 区的比值，默认为 8。
+- `-XX:+UseAdaptiveSizePolicy`：自动选择各区大小比例。
+- `-XX:NewRatio=4`：设置老年代与年轻代（包括 1 个 Eden 和 2 个 Survivor 区）的比值。
+- `-XX:PretenureSizeThreadshold=1024`
   - 设置让大于此阈值的对象直接分配在老年代，单位为字节。
   - 只对 Serial、ParNew 收集器有效。
-- -XX:MaxTenuringThreshold=15
+- `-XX:MaxTenuringThreshold=15`
   - 默认值为 15。
   - 新生代每次 MinorGC 后，还存活的对象年龄 +1，当对象的年龄大于设置的这个值时就进入老年代。
-- -XX:+PrintTenuringDistribution：让 JVM 在每次 MinorGC 后打印出当前使用的 Survivor 中对象的年龄分布。
-- -XX:TargetSurvivoRatio：表示 MinorGC 结束后 Survivor 区域中占用空间的期望比例。
+- `-XX:+PrintTenuringDistribution`：让 JVM 在每次 MinorGC 后打印出当前使用的 Survivor 中对象的年龄分布。
+- `-XX:TargetSurvivoRatio`：表示 MinorGC 结束后 Survivor 区域中占用空间的期望比例。
 
 方法区：
 
 - 永久代：
-  - -XX:PermSize=256m：设置永久代初始值为 256M。
-  - -XX:MaxPermSize=256m：设置永久代最大值为 256M。
+  - `-XX:PermSize=256m`：设置永久代初始值为 256M。
+  - `-XX:MaxPermSize=256m`：设置永久代最大值为 256M。
 - 元空间：
-  - -XX:MetaspaceSize：初始空间大小。
-  - -XX:MaxMetaspaceSize：最大空间，默认没有限制。
-  - -XX:+UseCompressedOops：压缩对象指针。
-  - -XX:CompressedClassSpaceSize：设置 Class Metaspace 的大小，默认 1G。
+  - `-XX:MetaspaceSize`：初始空间大小。
+  - `-XX:MaxMetaspaceSize`：最大空间，默认没有限制。
+  - `-XX:+UseCompressedOops`：压缩对象指针。
+  - `-XX:CompressedClassSpaceSize`：设置 Class Metaspace 的大小，默认 1G。
 
 直接内存：
 
-- -XX:MaxDirectMemorySize：指定 DirectMemory 容量，若未指定，则默认与 Java 堆最大值一样。
+- `-XX:MaxDirectMemorySize`：指定 DirectMemory 容量，若未指定，则默认与 Java 堆最大值一样。
 
 ### OutOfMemory 相关的选项
 
-- -XX:+HeapDumpOnOutOfMemoryError：表示在内存出现 OOM 的时候，把 Heap 转存（Dump）到文件以便后续分析。
-- -XX:+HeapDumpBeforeFullGC：表示在出现 FullGC 之前，生成 Heap 转储文件。
-- -XX:HeapDumpPath=<path>：指定 Heap 转存文件的存储路径。
-- -XX:OnOutOfMemoryError：指定一个可行性程序或者脚本的路径，当发生 OOM 的时候，去执行这个脚本。
+- `-XX:+HeapDumpOnOutOfMemoryError`：表示在内存出现 OOM 的时候，把 Heap 转存（Dump）到文件以便后续分析。
+- `-XX:+HeapDumpBeforeFullGC`：表示在出现 FullGC 之前，生成 Heap 转储文件。
+- `-XX:HeapDumpPath=<path>`：指定 Heap 转存文件的存储路径。
+- `-XX:OnOutOfMemoryError`：指定一个可行性程序或者脚本的路径，当发生 OOM 的时候，去执行这个脚本。
+
+    > 对 OnOutOfMemoryError 的运维处理
+    >
+    > 以部署在 Linux 系统 /opt/Server 目录下的 Server.jar 为例
+    >
+    > 1. 在 run.sh 启动脚本添加 JVM 参数：`-XX:OnOutOfMemoryError=/opt/Server/restart.sh`
+    > 2. restart.sh 脚本
+    >
+    > Linux 环境：
+    >
+    > ```shell
+    > #!/bin/bash
+    > pid=${ps -ef | grep Server.jar | awk '{if($8=="java") {print $2}}'}
+    > kill -9 pid
+    > cd /opt/Server/;sh run.sh
+    > ```
+    >
+    > Windows 环境：
+    >
+    > ```shell
+    > echo off
+    > wmic process where Name='java.exe' delete
+    > cd D:\Server
+    > start run.bat
+    > ```
 
 ### 垃圾收集器相关选项
+
+
 
 ### GC 日志相关选项
 
