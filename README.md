@@ -1,4 +1,4 @@
-# JavaBasicKnowledge 不至于面试！
+# JavaBasicKnowledge 不止于面试！
 
 收录各大技术经典知识总结，仓库主要包含内容如下：
 
